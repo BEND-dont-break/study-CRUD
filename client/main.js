@@ -17,4 +17,10 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   const div = body.appendChild(document.createElement('div'));
   div.appendChild(document.createElement('ul'));
+
+  fetch('/getTasks')
+    .then(data => data.json())
+    .then(tasks => {
+      console.log('Tasks => ', tasks)
+    });
 })
