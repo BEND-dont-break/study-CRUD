@@ -5,4 +5,7 @@ const router = express.Router();
 router.get('/getTasks', taskController.getTasks,
 (req, res) => res.status(200).json(res.locals.tasks));
 
+router.post('/createTask', taskController.createTask,
+(req, res) => res.status(200));
+
 module.exports = router;

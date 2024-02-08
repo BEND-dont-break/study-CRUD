@@ -11,7 +11,8 @@ mongoose.connect(process.env.MONGO_URI, {
 const Schema = mongoose.Schema;
 
 const taskSchema = new Schema({
-  task: {type: String, required: true}
+  task: {type: String, required: true},
+  complete: {type: Boolean, default: false}
 });
 
 const Task = mongoose.model('task', taskSchema);
