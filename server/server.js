@@ -3,6 +3,7 @@ const app = express();
 const path = require ('path');
 const router = require('./routers/mainRouter');
 
+app.use(express.json());
 
 app.use(express.static(path.join(__dirname, '../')));
 

@@ -6,6 +6,6 @@ router.get('/getTasks', taskController.getTasks,
 (req, res) => res.status(200).json(res.locals.tasks));
 
 router.post('/createTask', taskController.createTask,
-(req, res) => res.status(200));
+(req, res) => res.status(200).json(res.locals.newTask));
 
 module.exports = router;

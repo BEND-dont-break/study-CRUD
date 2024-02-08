@@ -1,5 +1,5 @@
 class Task {
-  constructor(el) {
+  constructor() {
     const body = document.querySelector('body');
     const mainTaskDiv = body.appendChild(document.createElement('div'));
     const h2 = body.appendChild(document.createElement('h2'));
@@ -30,15 +30,31 @@ class Task {
   }
 
   create(task) {
+    const body = document.querySelector('body');
     fetch('/createTask', {
       method: 'POST',
       mode: 'cors',
       headers: {
         'content-type': 'application/json'
       },
-      body: JSON.stringify(task)
+      body: JSON.stringify({task})
     })
-    // .then(() => this.display());
+    .then(data => data.json())
+    .then((task) => {
+    const taskDiv = body.appendChild(document.createElement('div'));
+    const taskInfo = taskDiv.appendChild(document.createElement('h3'));
+    const compStatus = taskDiv.appendChild(document.createElement('p'));
+    taskInfo.innerText = task.task;
+    switch (task.complete) {
+      case false:
+        compStatus.innerText = 'Not Complete'
+        break;
+    
+      case true:
+        compStatus.innerText = 'Complete'
+        break;
+    };});
+  
   }
 
 }

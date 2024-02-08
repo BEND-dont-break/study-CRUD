@@ -16,8 +16,10 @@ taskController.getTasks = async (req, res, next) => {
 
 taskController.createTask = async (req, res, next) => {
   try {
-    console.log('Hit me!')
-    console.log('Request => ', req.body);
+    const task = req.body.task;
+    const taskSave = await db.create({task});
+    console.log('taskSave => ', taskSave)
+    res.locals.newTask = taskSave;
     return next();
   } catch (error) {
     console.log('Error in createTask middleware => ', error);
