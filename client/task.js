@@ -1,18 +1,19 @@
 class Task {
   constructor() {
     const body = document.querySelector('body');
-    const mainTaskDiv = body.appendChild(document.createElement('div'));
     const h2 = body.appendChild(document.createElement('h2'));
     h2.innerText = 'Task List';
+    const mainTaskDiv = body.appendChild(document.createElement('div'));
+    mainTaskDiv.setAttribute('id', 'mainTask');
   }
 
   display() {
-    const body = document.querySelector('body');
+    const mainTaskDiv = document.querySelector('#mainTask');
     fetch('/getTasks')
     .then(data => data.json())
     .then(tasks => {
       tasks.forEach(element => {
-        const taskDiv = body.appendChild(document.createElement('div'));
+        const taskDiv = mainTaskDiv.appendChild(document.createElement('div'));
         const taskInfo = taskDiv.appendChild(document.createElement('h3'));
         const compStatus = taskDiv.appendChild(document.createElement('p'));
         taskInfo.innerText = element.task;
@@ -45,15 +46,15 @@ class Task {
     const taskInfo = taskDiv.appendChild(document.createElement('h3'));
     const compStatus = taskDiv.appendChild(document.createElement('p'));
     taskInfo.innerText = task.task;
-    switch (task.complete) {
-      case false:
+    // switch (task.complete) {
+    //   case false:
         compStatus.innerText = 'Not Complete'
-        break;
+      //   break;
     
-      case true:
-        compStatus.innerText = 'Complete'
-        break;
-    };});
+      // case true:
+      //   compStatus.innerText = 'Complete'
+      //   break;
+    });
   
   }
 
