@@ -3,17 +3,34 @@ class Task {
     this.task = task;
     this.status = status;
   }
-  read() {
-    // fetch('/')
-    //   .then(response => response.json())
-    //   .then(console.log(response))
-    //   .catch(err => {
-    //     console.log('error in create func main.js: ', err)
-    //   })
-    // const taskList = document.createElement('div').setAttribute('id', 'taskList');
+  
+  async read(newTask) {
+    let tasks;
+    try {
+      const response = await fetch('/tasks');
+      tasks = await response.json();
+    } catch (error) {
+      console.log('Error in main.js/read(): ', error);
+    }
 
-    // const div = taskList.appendChild(document.createElement('div').setAttribute('class', 'taskItem'));
-  }
+      tasks.forEach(el => {
+        const taskWrapper = document.getElementById('taskWrapper');
+        const taskDiv = taskWrapper.appendChild(document.createElement('div'));
+        const taskTitle = taskDiv.appendChild(document.createElement('h3'));
+        taskTitle.innerHTML = el.task;
+        const taskStatus = taskDiv.appendChild(document.createElement('button'));
+        taskStatus.setAttribute('id', el._id);
+        taskStatus.innerHTML = el.completed ? 'Completed' : 'Not Completed';
+        taskStatus.onclick = () => {
+          if (taskStatus.innerHTML === 'Not Completed') {
+            taskStatus.innerHTML = 'Completed';
+          } else if (taskStatus.innerHTML === 'Completed') {
+            taskStatus.innerHTML = 'Not Completed';
+          }
+          this.update(el._id, taskStatus.innerHTML);
+        }
+      })
+  } 
   create() {
     fetch('/', {
       method: 'POST',
@@ -24,11 +41,29 @@ class Task {
     })
       .then(response => response.json())
       .then(response => {
-        console.log(response, 'response in main.js');
+        this.read(response);
       })
   }
-  update() {
-
+  update(id, status) {
+    if (status === 'Not Completed') {
+      status = false;
+    } else if (status === 'Completed') {
+      status = true;
+    }
+    fetch('/tasks', {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': "application/json",
+      },
+      body: JSON.stringify({
+        status,
+        id,
+      })
+    })
+    .then(response => response.json())
+    .then(response => {
+      console.log(response, 'updated in main.js')
+    })
   }
   delete() {
 
@@ -37,7 +72,7 @@ class Task {
 
 document.addEventListener('DOMContentLoaded', () => {
   const readTasks = new Task();
-  readTasks.update();
+  readTasks.read();
   const body = document.querySelector('body');
   const form = body.appendChild(document.createElement('form'));
   const label = form.appendChild(document.createElement('label'));
@@ -46,11 +81,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const button = form.appendChild(document.createElement('button'));
   button.innerHTML = 'button';
   button.onclick = (e) => {
-    console.log('hi')
     e.preventDefault();
     const newTask = new Task(input.value);
     newTask.create();
   }
-  const div = body.appendChild(document.createElement('div'));
-  div.appendChild(document.createElement('ul'));
+
+  const taskWrapper = body.appendChild(document.createElement('div'));
+  taskWrapper.setAttribute('id', 'taskWrapper');
 })

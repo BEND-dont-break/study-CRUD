@@ -9,8 +9,12 @@ app.post('/', controller.createTask, (req, res) => {
     res.status(200).json(res.locals.newTask);
 })
 
-app.get('/', controller.getTasks, (req, res) => {
+app.get('/tasks', controller.getTasks, (req, res) => {
   res.status(200).json(res.locals.tasks);
+})
+
+app.patch('/tasks', controller.updateTask, (req, res) => {
+  res.status(200).json(res.locals.status);
 })
 
 
