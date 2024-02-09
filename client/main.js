@@ -5,14 +5,13 @@ document.addEventListener('DOMContentLoaded', () => {
   label.innerHTML = 'New Task';
   const input = form.appendChild(document.createElement('input'));
   const button = form.appendChild(document.createElement('button'));
-  button.innerHTML = 'button';
+  button.innerHTML = 'Submit';
   const div = body.appendChild(document.createElement('div'));
   div.appendChild(document.createElement('ul'));
   
   const task = new Task();
-  button.onclick = (event) => {
+  button.onclick = async (event) => {
     event.preventDefault();
-    console.log()
     task.create(input.value);
   }
   task.display();

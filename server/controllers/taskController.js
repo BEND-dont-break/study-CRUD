@@ -26,4 +26,37 @@ taskController.createTask = async (req, res, next) => {
   }
 }
 
+taskController.deleteTask = async (req, res, next) => {
+  try {
+    const task = req.body.task
+    const taskDelete = await db.deleteOne({task});
+    return next();
+  } catch (error) {
+    console.log('Error in deleteTask middleware => ', error);
+  }
+}
+
+taskController.updateStatus = async (req, res, next) => {
+  try {
+    const task = req.body.task;
+    const compText = req.body.compText;
+    let taskUpdate;
+    let updated;
+    switch (compText) {
+      case 'Not Complete':
+        taskUpdate = await db.updateOne({task}, {complete: true});
+        break;
+    
+      case 'Complete':
+        taskUpdate = await db.updateOne({task}, {complete: false});
+        break;
+    };
+    updated = await db.findOne({task});
+    res.locals.newStatus = updated;
+    return next();
+  } catch (error) {
+    console.log('Error in updateStatus middleware => ', error);
+  }
+}
+
 module.exports = taskController;

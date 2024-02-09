@@ -1,0 +1,10 @@
+.taskDiv {
+  border-radius: 2px;
+  border-style: solid;
+  border-color: black;
+}
+
+#mainTask {
+  display: flex;
+  text-align: center;
+}

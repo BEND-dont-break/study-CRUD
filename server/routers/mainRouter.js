@@ -8,4 +8,10 @@ router.get('/getTasks', taskController.getTasks,
 router.post('/createTask', taskController.createTask,
 (req, res) => res.status(200).json(res.locals.newTask));
 
+router.post('/deleteTask', taskController.deleteTask,
+(req, res) => res.status(200).end());
+
+router.post('/updateStatus', taskController.updateStatus,
+(req, res) => res.status(200).json(res.locals.newStatus));
+
 module.exports = router;
