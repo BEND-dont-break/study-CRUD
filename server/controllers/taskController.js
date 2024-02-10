@@ -5,9 +5,12 @@ const taskController = {};
 
 taskController.getTasks = async (req, res, next) => {
   try {
-    const taskData = await db.find({});
-    console.log(taskData);
-    res.locals.tasks = taskData;
+    const userTasks = await db.User.findOne({_id: req.cookies.ssid});
+    console.log('User Tasks => ', userTasks);
+    const populated = await userTasks.populate('tasks');
+    console.log('Populated => ', populated);
+    const taskData = await db.Task.find({});
+    res.locals.tasks = populated.tasks;
     return next();
   } catch (error) {
     console.log('Error in getTasks middleware => ', error);
@@ -17,7 +20,12 @@ taskController.getTasks = async (req, res, next) => {
 taskController.createTask = async (req, res, next) => {
   try {
     const task = req.body.task;
-    const taskSave = await db.create({task});
+    const {user_id} = req.cookies
+    const taskSave = await db.Task.create({task});
+    const user = await db.User.findOne({user_id});
+    const tasks = [...user.tasks];
+    tasks.push(taskSave._id)
+    const userTask = await db.User.updateOne({user_id}, {tasks})
     console.log('taskSave => ', taskSave)
     res.locals.newTask = taskSave;
     return next();
@@ -29,7 +37,7 @@ taskController.createTask = async (req, res, next) => {
 taskController.deleteTask = async (req, res, next) => {
   try {
     const task = req.body.task
-    const taskDelete = await db.deleteOne({task});
+    const taskDelete = await db.Task.deleteOne({task});
     return next();
   } catch (error) {
     console.log('Error in deleteTask middleware => ', error);
@@ -44,14 +52,14 @@ taskController.updateStatus = async (req, res, next) => {
     let updated;
     switch (compText) {
       case 'Not Complete':
-        taskUpdate = await db.updateOne({task}, {complete: true});
+        taskUpdate = await db.Task.updateOne({task}, {complete: true});
         break;
     
       case 'Complete':
         taskUpdate = await db.updateOne({task}, {complete: false});
         break;
     };
-    updated = await db.findOne({task});
+    updated = await db.Task.findOne({task});
     res.locals.newStatus = updated;
     return next();
   } catch (error) {

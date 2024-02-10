@@ -9,7 +9,7 @@ class Task {
 
   display() {
     const mainTaskDiv = document.querySelector('#mainTask');
-    fetch('/getTasks')
+    fetch('/main/getTasks')
     .then(data => data.json())
     .then(tasks => {
       tasks.forEach((element, index) => {
@@ -53,7 +53,7 @@ class Task {
 
   create(task) {
     const body = document.querySelector('body');
-    fetch('/createTask', {
+    fetch('/main/createTask', {
       method: 'POST',
       mode: 'cors',
       headers: {
@@ -73,7 +73,7 @@ class Task {
     const task = taskInfo.innerHTML
 
     // Send POST to backend
-    fetch('/deleteTask', {
+    fetch('/main/deleteTask', {
       method: 'POST',
       mode: 'cors',
       headers: {
@@ -93,7 +93,7 @@ class Task {
     const compStatus = document.querySelector(`#compStatus${index}`);
     const compText = compStatus.innerHTML;
     const taskDiv = document.querySelector(`#taskDiv${index}`);
-    fetch('/updateStatus', {
+    fetch('/main/updateStatus', {
       method: 'POST',
       mode: 'cors',
       headers: {
