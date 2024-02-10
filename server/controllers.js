@@ -31,16 +31,38 @@ controller.getTasks = async (req, res, next) => {
 controller.updateTask = async (req, res, next) => {
   console.log(req.body, 'req.body in updatetask');
   try {
-    const update = await Task.findOneAndUpdate(
-      { _id: req.body.id }, 
-      { completed: true }, 
-      { new: true }
-    );
-    console.log(update, 'updated one')
-    
+    let update;
+    if (req.body.status) {
+      update = await Task.findOneAndUpdate(
+        { _id: req.body.id },
+        { completed: true },
+        { new: true }
+      );
+    } else if (!req.body.status) {
+      update = await Task.findOneAndUpdate(
+        { _id: req.body.id },
+        { completed: false },
+        { new: true }
+      );
+    }
+    console.log(update, 'update in controller.updateTask')
+    res.locals.status = update.completed;
+    return next();
   } catch (error) {
     console.error('could not find task in db', error)
   }
 }
 
+
+controller.deleteTask = async (req, res, next) => {
+  try {
+    const deleted = await Task.deleteOne({
+       _id: req.body.id 
+    })
+    res.locals.deleted = deleted;
+    return next();
+  } catch (error) {
+    console.error('could not find task to delete', error)
+  }
+}
 module.exports = controller;
